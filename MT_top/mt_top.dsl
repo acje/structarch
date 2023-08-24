@@ -5,15 +5,54 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             "structurizr.groupSeparator" "/"
             // Ikke bruk "/" i gruppe navn!
         }
-        !include Felles/ekstern.dsl
-        !include Felles/roller.dsl
+        // Vi velger å modellere mennesker gjennom de rollene de har i møte med våre systemer. "Borger" er eksempel på en
+        // person uten spesifikk rolle i den aktuelle konteksten.
+
+        borger = person "Borger" "Person uten spesifikk rolle i denne kontekst" "Ekstern"
+        driftsansvarlig = person "Driftsansvarlig" "Person eller underenhet som holder dyr" "Ekstern"
+        inspektor = person "Inspektør/ Saksbehandler" "Ansatt hos MT som gjennomfører saksbehandling på dyrehold"
+        programeier = person Programeier "Planlegger prøveuttak"
+        provetaker = person Prøvetaker "Den som tar prøve"
+
+        idPorten = softwareSystem "ID Porten" "Autentisering av Borger" "Ekstern"
+        azureAd = softwareSystem "AzureAD" "Autentisering av MT-ansatte" "Ekstern"
+        eksternLabSys = softwareSystem "Eksterne labsystemer" "Brukes av laboratorier som skal analysere prøver og gi svar" "Ekstern"
 
         group "Mattilsynets systemer" {
-            !include Mats/mats.dsl
-            !include Arkiv/arkiv.dsl
-            //!include Produksjonsdyr/produksjonsdyr.dsl
-            !include Provetaking/provetaking.dsl
-            !include Akvakultur/akvakultur.dsl
+
+            // Mats modell definisjon
+        group "Mats" {
+            mats = softwareSystem "Mats" "Mattilsynets tilsynsystem" {
+                matsServer = container "Mats Server"
+                matsDb = container "Mats DB" "Data om virksomhetsmapper og tilsynsobjekter++" "Oracle" "DB"
+                jens = container "Jens"
+            }
+        }
+
+            group "Arkiv" {
+                arkiv = softwareSystem "Arkiv"
+            }
+            // Team prøvetaking sin modell definisjon
+            group "Provetaking domenet" {
+                provetaking = softwareSystem "Prøvetaking" "System for å støtte programeiere, inspektører og andre i jobben med å planlegge og utføre prøvetaking. Inkluderer både OK-programmer og 'ad-hoc' prøver" {
+                    provePlan = container "PrøvePlan" "Planlegging av prøver. Typisk OK-programmer"
+                    proveTa = container "PrøveTa" "Ta og registrere prøver"
+                    proveSvar = container "PrøveSvar" "Status på innsendte prøver"
+                    proveApi = container "Prøve ta/svar API" "Backend støtte for ta og svar på prøver"
+                    planleggingsApi = container "Planleggings API" "Backend støtte for planlegginsapp"
+                    provetakingDb = container "Prøvetaking DB" "Lagrer alle data ifm planlegging og sporing av prøver" "Postgres/GIS" "DB"
+                    eksternAktor = container "Eksterne aktører" "Backend støtte for kommunikasjon med eksterne aktører"
+                }
+                provetaker -> provetaking.proveTa "Bruker App/webapp på, typisk, telefon"
+                provetaker -> provetaking.provePlan "Sjekker planer, planlegger i web-leser"
+                programeier -> provetaking "Legger planer i web-leser"
+                eksternLabSys -> provetaking.eksternAktor "Gjør API spørringer" "REST, JSON"
+                provetaking.proveTa -> provetaking.proveApi "Gjør API spørringer" "REST/Graphql, JSON"
+                provetaking.proveSvar -> provetaking.proveTa "Gjør API spørringer" "REST/Graphql, JSON"
+                provetaking.proveApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+                provetaking.eksternAktor -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+                provetaking.planleggingsApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+            }
 
             group "Min side" {           
                 minSide = softwareSystem "Min side" "Portal løsninger for eksterne aktører; Borgere og Bedrifter"
@@ -22,14 +61,50 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             group "Fagsystem portal" {
                 fagPortal = softwareSystem "Intern side" "Webside som kan brukes internt av Mattilsynet til å hente ut info om produksjonsplasser"
             }
-
         }
 
-// Relasjonsfiler legges nederst da verdiene (system, person, container, component) de refererer må være definert først.
-    //!include Produksjonsdyr/produksjonsdyr_relations.dsl
-    !include Akvakultur/akvakultur_relations.dsl
-    !include Mats/mats_relations.dsl
+        // Team Akvakultur sin modell definisjon
+        group "Akvakultur domenet" {
+            group "Altinn 2 plattform" {
+                altinnSkjema = softwareSystem "Altinn skjema" {
+                    altinnSplittAvData = container "Splitt av data"
+                    lakselusRapportering = container "Lakselus rapportering"
+                    biomasseRapportering = container "Biomasse rapportering"
+                    slaktRapportering = container "Slakt rapportering"
+                    settefiskRapportering = container "Settefisk rapportering"
+                }
 
+                altinnSkjema.lakselusRapportering -> altinnSkjema.altinnSplittAvData
+                altinnSkjema.biomasseRapportering -> altinnSkjema.altinnSplittAvData
+                altinnSkjema.slaktRapportering -> altinnSkjema.altinnSplittAvData
+                altinnSkjema.settefiskRapportering -> altinnSkjema.altinnSplittAvData
+            }
+            sild = softwareSystem "SILD" {
+                // Diskutabelt om en stream skal modelleres som container eller component, men de blir mer synlige
+                // på høyere abstraksjonsnivå som container, og det føltes riktig.
+                lakselusRapporteringV1 = container "mattilsynet.lakselus.rapportering.v1" "" "Kafka topic" "Stream"
+                mattilsynetBiomasseRapporteringV2 = container "mattilsynet.biomasse.rapportering.v2" "" "Kafka topic" "Stream"
+                slaktRapportering4evaV1 = container "mattilsynet.slakt.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                lakselusRapportering4evaV1 = container "mattilsynet.lakselus.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                biomasseRapportering4evaV2 = container "mattilsynet.biomasse.rapportering.4eva.v2" "" "Kafka topic" "Stream"
+                settefiskRapportering4evaV1 = container "mattilsynet.settefisk.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                slaktRapporteringHistorikkV1 = container "mattilsynet.slakt.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                lakselusRapporteringHistorikkV1 = container "mattilsynet.lakselus.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                biomasseRapporteringHistorikkV1 = container "mattilsynet.biomasse.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                settefiskRapporteringHistorikkV1 = container "mattilsynet.settefisk.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                lokaliteterV1 = container "mattilsynet.lokaliteter.v1" "" "Kafka topic" "Stream"
+                avdelingerV1 = container "mattilsynet.avdelinger.v1" "" "Kafka topic" "Stream"
+                eventV1 = container "mattilsynet.event.v1" "" "Kafka topic" "Stream"
+            }
+        }
+
+    // Mats relasjoner
+    minSide -> idPorten
+    fagPortal -> azureAd
+    inspektor -> mats "Saksbehandling"
+    mats -> arkiv
+    mats.matsServer -> mats.matsDb
+    mats.matsServer -> mats.jens
     }
 
     views {
@@ -37,11 +112,41 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             include *
             autoLayout
         }
-        //!include Produksjonsdyr/produksjonsdyr_view.dsl
-        !include Arkiv/arkiv_view.dsl
-        !include Mats/mats_view.dsl
-        !include Provetaking/provetaking_view.dsl
-        !include Akvakultur/akvakultur_view.dsl
+
+        systemContext "Arkiv" {
+            include *
+            autoLayout
+        }
+
+        // Mats view definisjoner
+        container "Mats" {
+            include *
+            autoLayout
+        }
+
+        systemContext mats "Mats" {
+            include *
+            autoLayout
+        }
+        systemContext provetaking "Provetaking" {
+            include *
+            autoLayout
+        }
+
+        container "Provetaking" {
+            include *
+            include eksternLabSys
+            autoLayout
+        }
+        systemContext sild "SILD" {
+            include *
+            autoLayout
+        }
+
+        container "sild" {
+            include *
+            autoLayout
+        }
 
         styles {
             element "Software System" {

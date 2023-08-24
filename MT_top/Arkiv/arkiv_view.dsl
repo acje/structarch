@@ -1,4 +1,0 @@
-systemContext "Arkiv" {
-    include *
-    autoLayout
-}
