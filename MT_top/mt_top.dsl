@@ -1,4 +1,3 @@
-// docker run -it --rm -p 8080:8080 -v /Users/ajensen/structurizr:/usr/local/structurizr structurizr/lite  
 workspace "MT arch" "Mattilsynet System Architecture: Plan" {
     !identifiers hierarchical
     model {
@@ -12,7 +11,7 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
         group "Mattilsynets systemer" {
             !include Mats/mats.dsl
             !include Arkiv/arkiv.dsl
-            !include Produksjonsdyr/produksjonsdyr.dsl
+            //!include Produksjonsdyr/produksjonsdyr.dsl
             !include Provetaking/provetaking.dsl
             !include Akvakultur/akvakultur.dsl
 
@@ -27,7 +26,7 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
         }
 
 // Relasjonsfiler legges nederst da verdiene (system, person, container, component) de refererer må være definert først.
-    !include Produksjonsdyr/produksjonsdyr_relations.dsl
+    //!include Produksjonsdyr/produksjonsdyr_relations.dsl
     !include Akvakultur/akvakultur_relations.dsl
     !include Mats/mats_relations.dsl
 
@@ -38,7 +37,7 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             include *
             autoLayout
         }
-        !include Produksjonsdyr/produksjonsdyr_view.dsl
+        //!include Produksjonsdyr/produksjonsdyr_view.dsl
         !include Arkiv/arkiv_view.dsl
         !include Mats/mats_view.dsl
         !include Provetaking/provetaking_view.dsl

@@ -11,5 +11,5 @@ container "Dyrehold" {
 container "Dyrehold" {
     include *
     include driftsansvarlig inspektor
-    //autoLayout
+    autoLayout
 }

@@ -11,10 +11,10 @@ group "Akvakultur domenet" {
             settefiskRapportering = container "Settefisk rapportering"
         }
 
-        lakselusRapportering -> altinnSplittAvData
-        biomasseRapportering -> altinnSplittAvData
-        slaktRapportering -> altinnSplittAvData
-        settefiskRapportering -> altinnSplittAvData
+        altinnSkjema.lakselusRapportering -> altinnSkjema.altinnSplittAvData
+        altinnSkjema.biomasseRapportering -> altinnSkjema.altinnSplittAvData
+        altinnSkjema.slaktRapportering -> altinnSkjema.altinnSplittAvData
+        altinnSkjema.settefiskRapportering -> altinnSkjema.altinnSplittAvData
     }
     sild = softwareSystem "SILD" {
         // Diskutabelt om en stream skal modelleres som container eller component, men de blir mer synlige

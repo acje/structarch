@@ -5,6 +5,4 @@ group "Mats" {
         matsDb = container "Mats DB" "Data om virksomhetsmapper og tilsynsobjekter++" "Oracle" "DB"
         jens = container "Jens"
     }
-    matsServer -> matsDb
-    matsServer -> jens
 }

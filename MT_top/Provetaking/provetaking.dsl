@@ -9,14 +9,14 @@ group "Provetaking domenet" {
         provetakingDb = container "Prøvetaking DB" "Lagrer alle data ifm planlegging og sporing av prøver" "Postgres/GIS" "DB"
         eksternAktor = container "Eksterne aktører" "Backend støtte for kommunikasjon med eksterne aktører"
     }
-    provetaker -> proveTa "Bruker App/webapp på, typisk, telefon"
-    provetaker -> provePlan "Sjekker planer, planlegger i web-leser"
+    provetaker -> provetaking.proveTa "Bruker App/webapp på, typisk, telefon"
+    provetaker -> provetaking.provePlan "Sjekker planer, planlegger i web-leser"
     programeier -> provetaking "Legger planer i web-leser"
-    eksternLabSys -> eksternAktor "Gjør API spørringer" "REST, JSON"
-    proveTa -> proveApi "Gjør API spørringer" "REST/Graphql, JSON"
-    proveSvar -> proveTa "Gjør API spørringer" "REST/Graphql, JSON"
-    proveApi -> provetakingDb "Leser fra og skriver til" "JDBC/SQL"
-    eksternAktor -> provetakingDb "Leser fra og skriver til" "JDBC/SQL"
-    planleggingsApi -> provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+    eksternLabSys -> provetaking.eksternAktor "Gjør API spørringer" "REST, JSON"
+    provetaking.proveTa -> provetaking.proveApi "Gjør API spørringer" "REST/Graphql, JSON"
+    provetaking.proveSvar -> provetaking.proveTa "Gjør API spørringer" "REST/Graphql, JSON"
+    provetaking.proveApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+    provetaking.eksternAktor -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
+    provetaking.planleggingsApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
 
 }
