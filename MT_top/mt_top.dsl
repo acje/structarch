@@ -10,7 +10,7 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
 
         borger = person "Borger" "Person uten spesifikk rolle i denne kontekst" "Ekstern"
         driftsansvarlig = person "Driftsansvarlig" "Person eller underenhet som holder dyr" "Ekstern"
-        inspektor = person "Inspektør/ Saksbehandler" "Ansatt hos MT som gjennomfører saksbehandling på dyrehold"
+        inspektor = person "Inspektør/ Saksbehandler" "Ansatt hos MT som gjennomfører inspeksjon og saksbehandling"
         programeier = person Programeier "Planlegger prøveuttak"
         provetaker = person Prøvetaker "Den som tar prøve"
 
@@ -64,43 +64,42 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             group "Fagsystem portal" {
                 fagPortal = softwareSystem "Intern side" "Webside som kan brukes internt av Mattilsynet til å hente ut info om produksjonsplasser"
             }
-        }
 
-        // Team Akvakultur sin modell definisjon
-        group "Akvakultur domenet" {
-            group "Altinn 2 plattform" {
-                altinnSkjema = softwareSystem "Altinn skjema" {
-                    altinnSplittAvData = container "Splitt av data"
-                    lakselusRapportering = container "Lakselus rapportering"
-                    biomasseRapportering = container "Biomasse rapportering"
-                    slaktRapportering = container "Slakt rapportering"
-                    settefiskRapportering = container "Settefisk rapportering"
+            // Team Akvakultur sin modell definisjon
+            group "Akvakultur domenet" {
+                group "Altinn 2 plattform" {
+                    altinnSkjema = softwareSystem "Altinn skjema" {
+                        altinnSplittAvData = container "Splitt av data"
+                        lakselusRapportering = container "Lakselus rapportering"
+                        biomasseRapportering = container "Biomasse rapportering"
+                        slaktRapportering = container "Slakt rapportering"
+                        settefiskRapportering = container "Settefisk rapportering"
+                    }
+
+                    altinnSkjema.lakselusRapportering -> altinnSkjema.altinnSplittAvData
+                    altinnSkjema.biomasseRapportering -> altinnSkjema.altinnSplittAvData
+                    altinnSkjema.slaktRapportering -> altinnSkjema.altinnSplittAvData
+                    altinnSkjema.settefiskRapportering -> altinnSkjema.altinnSplittAvData
                 }
-
-                altinnSkjema.lakselusRapportering -> altinnSkjema.altinnSplittAvData
-                altinnSkjema.biomasseRapportering -> altinnSkjema.altinnSplittAvData
-                altinnSkjema.slaktRapportering -> altinnSkjema.altinnSplittAvData
-                altinnSkjema.settefiskRapportering -> altinnSkjema.altinnSplittAvData
-            }
-            sild = softwareSystem "SILD" {
-                // Diskutabelt om en stream skal modelleres som container eller component, men de blir mer synlige
-                // på høyere abstraksjonsnivå som container, og det føltes riktig.
-                lakselusRapporteringV1 = container "mattilsynet.lakselus.rapportering.v1" "" "Kafka topic" "Stream"
-                mattilsynetBiomasseRapporteringV2 = container "mattilsynet.biomasse.rapportering.v2" "" "Kafka topic" "Stream"
-                slaktRapportering4evaV1 = container "mattilsynet.slakt.rapportering.4eva.v1" "" "Kafka topic" "Stream"
-                lakselusRapportering4evaV1 = container "mattilsynet.lakselus.rapportering.4eva.v1" "" "Kafka topic" "Stream"
-                biomasseRapportering4evaV2 = container "mattilsynet.biomasse.rapportering.4eva.v2" "" "Kafka topic" "Stream"
-                settefiskRapportering4evaV1 = container "mattilsynet.settefisk.rapportering.4eva.v1" "" "Kafka topic" "Stream"
-                slaktRapporteringHistorikkV1 = container "mattilsynet.slakt.rapportering.historikk.v1" "" "Kafka topic" "Stream"
-                lakselusRapporteringHistorikkV1 = container "mattilsynet.lakselus.rapportering.historikk.v1" "" "Kafka topic" "Stream"
-                biomasseRapporteringHistorikkV1 = container "mattilsynet.biomasse.rapportering.historikk.v1" "" "Kafka topic" "Stream"
-                settefiskRapporteringHistorikkV1 = container "mattilsynet.settefisk.rapportering.historikk.v1" "" "Kafka topic" "Stream"
-                lokaliteterV1 = container "mattilsynet.lokaliteter.v1" "" "Kafka topic" "Stream"
-                avdelingerV1 = container "mattilsynet.avdelinger.v1" "" "Kafka topic" "Stream"
-                eventV1 = container "mattilsynet.event.v1" "" "Kafka topic" "Stream"
+                sild = softwareSystem "SILD" {
+                    // Diskutabelt om en stream skal modelleres som container eller component, men de blir mer synlige
+                    // på høyere abstraksjonsnivå som container, og det føltes riktig.
+                    lakselusRapporteringV1 = container "mattilsynet.lakselus.rapportering.v1" "" "Kafka topic" "Stream"
+                    mattilsynetBiomasseRapporteringV2 = container "mattilsynet.biomasse.rapportering.v2" "" "Kafka topic" "Stream"
+                    slaktRapportering4evaV1 = container "mattilsynet.slakt.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                    lakselusRapportering4evaV1 = container "mattilsynet.lakselus.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                    biomasseRapportering4evaV2 = container "mattilsynet.biomasse.rapportering.4eva.v2" "" "Kafka topic" "Stream"
+                    settefiskRapportering4evaV1 = container "mattilsynet.settefisk.rapportering.4eva.v1" "" "Kafka topic" "Stream"
+                    slaktRapporteringHistorikkV1 = container "mattilsynet.slakt.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                    lakselusRapporteringHistorikkV1 = container "mattilsynet.lakselus.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                    biomasseRapporteringHistorikkV1 = container "mattilsynet.biomasse.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                    settefiskRapporteringHistorikkV1 = container "mattilsynet.settefisk.rapportering.historikk.v1" "" "Kafka topic" "Stream"
+                    lokaliteterV1 = container "mattilsynet.lokaliteter.v1" "" "Kafka topic" "Stream"
+                    avdelingerV1 = container "mattilsynet.avdelinger.v1" "" "Kafka topic" "Stream"
+                    eventV1 = container "mattilsynet.event.v1" "" "Kafka topic" "Stream"
+                }
             }
         }
-
     // Mats relasjoner
     minSide -> idPorten
     fagPortal -> azureAd
@@ -111,11 +110,11 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
     }
 
     views {
-        systemLandscape "Mattilsynet" "Mattilsynets systemlandskap" {
+      systemLandscape "Mattilsynet" "Mattilsynets systemlandskap" {
             include *
             autoLayout
         }
-
+ /* 
         systemContext "Arkiv" {
             include *
             autoLayout
@@ -150,7 +149,7 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             include *
             autoLayout
         }
-
+*/
         styles {
             element "Software System" {
                 background #1168bd
