@@ -1,9 +1,9 @@
-// Team [teamnavn] sin modell definisjon
+// Team Prøvetaking sin modell definisjon
 // Arv fra MT_top; stiler, alle softwareSystems og personer ie "!ref dyrehold", ++?
 
 workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/mt_top.dsl {
-    name "Domenenavn"
-    description "Domene beskrivelse"
+    name "Prøvetaking"
+    description "Prøvetaking Domenet"
     !identifiers hierarchical
     model {
         properties {
@@ -29,26 +29,20 @@ workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/
         provetaking.proveApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
         provetaking.eksternAktor -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
         provetaking.planleggingsApi -> provetaking.provetakingDb "Leser fra og skriver til" "JDBC/SQL"
-        }
+    }
         
     views {
-        systemContext mittSoftwareSystem "Dyrehold" {
+        systemContext provetaking "Dyrehold" {
             include *
             autoLayout
         }
 
-        container "mittSoftwareSystem" {
+        container "provetaking" {
             include *
             autoLayout
         }
         styles {
             // egen stil som overskriver den arvede stilen
         }
-        }
     }
 }
-
-
-
-
- 

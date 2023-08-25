@@ -31,8 +31,7 @@ workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/
             autoLayout
         }
         styles {
-            // egen stil som overskriver den arvede stilen
-        }
+            // egen stil som overskriver den arvede stilen fra MT_top.dsl
         }
     }
 }
