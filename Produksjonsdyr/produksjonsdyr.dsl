@@ -1,5 +1,5 @@
 // Team Produksjonsdyr sin modell definisjon
-// Arv fra MT_top; stiler, alle softwareSystems ie "!ref dyrehold", ++?
+// Arv fra MT_top; stiler, alle softwareSystems og personer ie "!ref dyrehold", ++?
 
 workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/mt_top.dsl {
     name Produksjonsdyr
@@ -30,7 +30,7 @@ workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/
         inspektor -> azureAd "Logger seg på"
         inspektor -> fagPortal "Se dyrehold"
         }
-
+        
     views {
         systemContext dyrehold "Dyrehold" {
             include *
@@ -46,29 +46,6 @@ workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/
             include *
             include driftsansvarlig inspektor
             autoLayout
-        }
-        styles {
-            element "Software System" {
-                background #1168bd
-                color #ffffff
-            }
-            element "Person" {
-                shape person
-                background #08427b
-                color #ffffff
-            }
-            element "DB" {
-                shape cylinder
-            }
-            element "Ekstern" {
-                background gray
-            }
-            element "Stream" {
-                shape pipe
-                background lightblue
-                width 800
-                height 80
-            }
         }
     }
 }
