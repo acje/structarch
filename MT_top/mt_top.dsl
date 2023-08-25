@@ -19,15 +19,18 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
         eksternLabSys = softwareSystem "Eksterne labsystemer" "Brukes av laboratorier som skal analysere prøver og gi svar" "Ekstern"
 
         group "Mattilsynets systemer" {
-
-            // Mats modell definisjon
-        group "Mats" {
-            mats = softwareSystem "Mats" "Mattilsynets tilsynsystem" {
-                matsServer = container "Mats Server"
-                matsDb = container "Mats DB" "Data om virksomhetsmapper og tilsynsobjekter++" "Oracle" "DB"
-                jens = container "Jens"
+            group "Produksjonsdyr domenet" {
+               dyrehold = softwareSystem "Dyrehold og Produksjonsplass"
             }
-        }
+            
+            // Mats modell definisjon
+            group "Mats" {
+                mats = softwareSystem "Mats" "Mattilsynets tilsynsystem" {
+                    matsServer = container "Mats Server"
+                    matsDb = container "Mats DB" "Data om virksomhetsmapper og tilsynsobjekter++" "Oracle" "DB"
+                    jens = container "Jens"
+                }
+            }
 
             group "Arkiv" {
                 arkiv = softwareSystem "Arkiv"
