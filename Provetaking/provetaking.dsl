@@ -1,7 +1,7 @@
 // Team Prøvetaking sin modell definisjon
 // Arv fra MT_top; stiler, alle softwareSystems og personer ie "!ref dyrehold", ++?
 
-workspace extends https://raw.githubusercontent.com/acje/structarch/main/MT_top/mt_top.dsl {
+workspace extends ../MT_top/mt_top.dsl {
     name "Prøvetaking"
     description "Prøvetaking Domenet"
     !identifiers hierarchical
