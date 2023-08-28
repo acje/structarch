@@ -1,16 +1,12 @@
 // Team Prøvetaking sin modell definisjon
-// Arv fra MT_top; stiler, alle softwareSystems og personer ie "!ref dyrehold", ++?
+// Arv fra MT_top; stiler, alle softwareSystems og personer ie "!ref dyrehold", groupSeparator: "/"
+// Ikke bruk "/" i gruppe navn!
 
 workspace extends ../MT_top/mt_top.dsl {
     name "Prøvetaking"
     description "Prøvetaking Domenet"
     !identifiers hierarchical
     model {
-        properties {
-            "structurizr.groupSeparator" "/"
-            // Ikke bruk "/" i gruppe navn!
-        }
-
         !ref provetaking {
             provePlan = container "PrøvePlan" "Planlegging av prøver. Typisk OK-programmer"
             proveTa = container "PrøveTa" "Ta og registrere prøver"

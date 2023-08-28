@@ -5,9 +5,9 @@ workspace "MT arch" "Mattilsynet System Architecture: Plan" {
             "structurizr.groupSeparator" "/"
             // Ikke bruk "/" i gruppe navn!
         }
+ 
         // Vi velger å modellere mennesker gjennom de rollene de har i møte med våre systemer. "Borger" er eksempel på en
         // person uten spesifikk rolle i den aktuelle konteksten.
-
         borger = person "Borger" "Person uten spesifikk rolle i denne kontekst" "Ekstern"
         driftsansvarlig = person "Driftsansvarlig" "Person eller underenhet som holder dyr" "Ekstern"
         inspektor = person "Inspektør/ Saksbehandler" "Ansatt hos MT som gjennomfører inspeksjon og saksbehandling"
